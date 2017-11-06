@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>The Presence Project Blog</title>
+    <link>https://example.com/</link>
+    <description>Recent content on The Presence Project Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; 2017 | &lt;a href=&#34;https://github.com/mgjohansen/hucore.git&#34; target=&#34;_blank&#34;&gt;Hucore theme&lt;/a&gt; &amp; &lt;a href=&#34;http://gohugo.io&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; ♥</copyright>
+    <lastBuildDate>Tue, 31 Oct 2017 22:55:41 -0400</lastBuildDate>
+    
+	<atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Presence Project - Proposal</title>
+      <link>https://example.com/posts/proposal/</link>
+      <pubDate>Tue, 31 Oct 2017 22:55:41 -0400</pubDate>
+      
+      <guid>https://example.com/posts/proposal/</guid>
+      <description>This is the proposal for the Presence Project, an art piece that is activated the longer and the more people gaze directly at it. It would encourage being present and engaged, and connect the fellow participants with each other over moments of mindfulness.
+We will use small cameras and computer vision to detect the quantify of people present and how many of them are gazing at a specific point, and reveal parts of the piece using motors and other physical controls.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta content="keyword 1, keyword 2, keyword 3" name="keywords">
+<meta content="The Presense Project" name="author">
+<meta property="og:title" content="The Presence Project - Proposal - The Presence Project Blog">
+<meta property="og:url" content="https://example.com/posts/proposal/">
+<meta property="og:description" content="Your description here">
+<meta property="og:type" content="website" />
+<title>The Presence Project - Proposal | The Presence Project Blog</title>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<link rel="stylesheet" href="https://example.com/css/style.css">
+<link rel="shortcut icon" href="https://example.com/wave.ico">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/github.min.css">
+
+</head>
+
+<body>
+<section class="section">
+  <div class="container">
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="nav-item" href="https://example.com"><h1 class="title is-4">The Presence Project Blog</h1></a>
+      </div>
+      <div class="nav-right">
+        <nav class="nav-item level is-mobile">
+          
+        </nav>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">The Presence Project - Proposal</h1>
+    <h2 class="subtitle is-5">October 31, 2017 by Dan Oved</h2>
+    
+    <div class="content">
+      
+
+<p>This is the proposal for the Presence Project, an art piece that is activated the longer and the more people gaze directly at it.  It would encourage
+being present and engaged, and connect the fellow participants with each other over moments of mindfulness.</p>
+
+<p>We will use small cameras and computer vision to detect the quantify of people present and how many of them are gazing at a specific point,
+and reveal parts of the piece using motors and other physical controls.</p>
+
+<p>Our team will be formed of <a href="http://oveddan.github.io">me</a>, <a href="http://www.barakchamo.com">Barak Chamo</a>, and <a href="http://www.katyarozanova.com/">Katya Rozanova</a>. I&rsquo;m doing this as the final projects
+for both <a href="https://oveddan.github.io/blog/tags/physical-computing/">Intro to Physical Computing</a>, and <a href="https://oveddan.github.io/blog/tags/digital-fabrication/">Design for Digital Fabrication</a>, and will use elements of <a href="http://www.basicanalogcircuits.com/Syllabus.html">Basic Analog Circuits</a>.</p>
+
+<p>For me this addresses a personal issue I&rsquo;ve had since I was a kid - my mother has told me that when we went to theme parks,
+I already wanted to get on the next ride before the current one was finished. This urge to jump from one thing to the other has stayed with me since then, and hasn&rsquo;t been helped
+the least bit by push notifications and rapid-fire content consumption.  I also notice quite often at museums my mind is elsewhere, and I look at everything for a few seconds before moving on.</p>
+
+<p>It would be interesting to challenge the user to remain in front of a piece and be present with it.</p>
+
+<h1 id="eye-tracking">Eye Tracking</h1>
+
+<p>Much of the implementation will be based on incredible research from 2016 called <a href="http://gazecapture.csail.mit.edu/">Eye Tracking for Everyone</a> by Kyle Krafk et. al at MIT,
+where they were able to train a convolutional neural network to detect where a user is gazing on an IPhone or tablet using just the stock camera with 1.71 cm accuracy.  They were able to compress the
+network to run in real-time (10-15fps) on a mobile device.</p>
+
+<p>They built an impressive and massive database to train and test this network - 1,450 people and almost 2.5M frames by using Mechanical Turk to source participants and an app that recorded
+where a user was looking when a red dot was moved on the screen.</p>
+
+
+<figure >
+    
+        <img src="/images/proposal/testdata.png" alt="Some of the images they used to train the network" />
+    
+    
+    <figcaption>
+        <p>
+        Some of the images they used to train the network
+        
+            
+        
+        </p> 
+    </figcaption>
+    
+</figure>
+
+
+
+<figure >
+    
+        <img src="/images/proposal/convnet.png" alt="The convolution neural network architecture.  See the research paper for details" />
+    
+    
+    <figcaption>
+        <p>
+        The convolution neural network architecture.  See the research paper for details
+        
+            
+        
+        </p> 
+    </figcaption>
+    
+</figure>
+
+
+<p>They&rsquo;ve provided the pre-trained models - we will attempt to run these models in real time to determine if a user is looking at a specific point.</p>
+
+<p>This model takes as inputs: a picture of the face, a picture of each eye, and the position of the face within the picture.  The network learns to triangulate
+this data and determine where the eyes are gazing.</p>
+
+<p>As the first step of our implementation, we need to extract the face and eye positions.  The paper says they did it using Apple&rsquo;s <a href="https://developer.apple.com/library/content/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_detect_faces/ci_detect_faces.html">Core Image face detection</a>.
+We don&rsquo;t want to necessarily be bound to apple to build this, but could resort to using a mac mini if we see other methods are not working well.  For now, we prototyped
+extracting face and eye positions using processing and opencv.  It works decently well - there are some bugs in how we place the eye boxes.</p>
+
+
+<figure >
+    
+        <img src="/images/proposal/face_detect.gif" alt="First stab at face and eye detection with OpenCV" />
+    
+    
+    <figcaption>
+        <p>
+        First stab at face and eye detection with OpenCV
+        
+            
+        
+        </p> 
+    </figcaption>
+    
+</figure>
+
+
+    </div>
+    
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container has-text-centered">
+    <p>&copy; 2017 | <a href="https://github.com/mgjohansen/hucore.git" target="_blank">Hucore theme</a> & <a href="http://gohugo.io" target="_blank">Hugo</a> ♥</p>
+  </div>
+</section>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js" integrity="sha256-+bhVTaRmJ/c07eV80nU8gD2cBBF0rYkf1txqXlrbvb0=" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/go.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/languages/dockerfile.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'trackingcode', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
+</body>
