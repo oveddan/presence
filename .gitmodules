@@ -1,0 +1,6 @@
+[submodule "docs/themes/even"]
+	path = docs/themes/even
+	url = https://github.com/olOwOlo/hugo-theme-even
+[submodule "docs/themes/hucore"]
+	path = docs/themes/hucore
+	url = git@github.com:mgjohansen/hucore.git
