@@ -1,0 +1,8 @@
+version: '3'
+services:
+  caffe:
+    build: .
+    volumes:
+      - .:/notebooks
+    ports:
+      - "8888:8888"
