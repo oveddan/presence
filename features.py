@@ -58,31 +58,17 @@ def faceGridFromFaceRect(frameW, frameH, gridW, gridH, labelFaceX, labelFaceY, l
 
     return labelFaceGrid
 
-def get_right_left_eyes(roi_gray):
-    # sort descending
+def detect_eyes(face, img, gray):
+    [x,y,w,h] = face
+    roi_gray = gray[y:y+h, x:x+w]
+
     eyes = eye_cascade.detectMultiScale(roi_gray)
     eyes_sorted_by_size = sorted(eyes, key=lambda x: -x[2])
     largest_eyes = eyes_sorted_by_size[:2]
     # sort by x position
     largest_eyes.sort(key=lambda x: x[0])
-    return largest_eyes
-
-def extract_face_features(face, img, gray):
-    [x,y,w,h] = face
-    roi_gray = gray[y:y+h, x:x+w]
-    face_image = np.copy(img[y:y+h, x:x+w])
-
-    eyes = get_right_left_eyes(roi_gray)
-    eye_images = []
-    for (ex,ey,ew,eh) in eyes:
-        eye_images.append(np.copy(img[y+ey:y+ey+eh,x+ex:x+ex+ew]))
-
-    roi_color = img[y:y+h, x:x+w]
-    for (ex,ey,ew,eh) in eyes:
-        cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
-
-
-    return face_image, eye_images
+    # offset by face start
+    return list(map(lambda eye: [face[0] + eye[0], face[1] + eye[1], eye[2], eye[3]], largest_eyes))
 
 def get_face_grid(face, frameW, frameH, gridSize):
     faceX,faceY,faceW,faceH = face
@@ -98,16 +84,29 @@ def extract_image_features(img):
     face_features = []
     for [x,y,w,h] in face_detections:
         face = [x, y, w, h]
-        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-        face_image, eye_images = extract_face_features(face, img, gray)
+        eyes = detect_eyes(face, img, gray)
         face_grid = get_face_grid(face, img.shape[1], img.shape[0], 25)
 
         faces.append(face)
-        face_features.append([face_image, eye_images, face_grid])
+        face_features.append([eyes, face_grid])
 
     duration_ms = current_time() - start_ms
     print("Face and eye extraction took: ", str(duration_ms / 1000) + "s")
 
     return img, faces, face_features
+
+def draw_detected_features(img, faces, face_features):
+    # eye_images = []
+    # for (ex,ey,ew,eh) in eyes:
+    #     eye_images.append(np.copy(img[y+ey:y+ey+eh,x+ex:x+ex+ew]))
+    for i, face in enumerate(faces):
+        [x, y, w, h] = face
+        eyes, face_grid = face_features[i]
+
+        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+
+        for [ex,ey,ew,eh] in eyes:
+            cv2.rectangle(img,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+
 
 gridSize = 25

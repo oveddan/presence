@@ -2,7 +2,7 @@ import sys
 sys.path.append('/usr/bin/caffe')
 import caffe
 import numpy as np
-from lib import current_time
+from lib import current_time, crop_image
 import os
 
 
@@ -56,17 +56,16 @@ def set_batch_size(batch_size):
 
 set_batch_size(1)
 
+def test_face(img, face, face_feature):
+    eyes, face_grid = face_feature
 
-def test_face(face, face_feature):
-    face_image, eye_images, face_grid = face_feature
-
-    if len(eye_images) < 2:
+    if len(eyes) < 2:
         return None
 
     start_ms = current_time()
-    transformed_right_eye = right_eye_transformer.preprocess('image_right', eye_images[0])
-    transformed_left_eye = left_eye_transformer.preprocess('image_left', eye_images[1])
-    transformed_face = face_transformer.preprocess('image_face', face_image)
+    transformed_right_eye = right_eye_transformer.preprocess('image_right', crop_image(img, eyes[0]))
+    transformed_left_eye = left_eye_transformer.preprocess('image_left', crop_image(img, eyes[1]))
+    transformed_face = face_transformer.preprocess('image_face', crop_image(img, face))
     transformed_face_grid = np.copy(face_grid).reshape(1, 625, 1, 1)
 
     net.blobs['image_left'].data[...] = transformed_left_eye
@@ -81,10 +80,10 @@ def test_face(face, face_feature):
     return np.copy(output['fc3'][0])
 
 
-def test_faces(faces, face_features):
+def test_faces(img, faces, face_features):
     outputs = []
     for i, face in enumerate(faces):
-        output = test_face(face, face_features[i])
+        output = test_face(img, face, face_features[i])
 
         if output is not None:
             outputs.append(output)
