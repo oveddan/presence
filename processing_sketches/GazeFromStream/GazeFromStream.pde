@@ -31,7 +31,6 @@ void parseAndSetGazes(String gazeString) {
      }
      else {
         gazes = new float[1][2];
-        println(gazeString, gazeString.split(",").length);
         String[] parts = gazeString.split(",");
         gazes[0][0] = float(parts[0]);
         gazes[0][1] = float(parts[1]);
@@ -41,15 +40,15 @@ void parseAndSetGazes(String gazeString) {
   println("Parsed");
 }
 
-float maxWidthCm = 15;
+float maxWidthCm = 10;
 float maxHeightCm = 5;
 void drawGazes() {
   println("drawing gazes: ", gazes.length);
   for(int i = 0; i < gazes.length; i++) {
     float x = map(gazes[i][0], -maxWidthCm, maxWidthCm, 0, w);
-    float y = map(gazes[i][1], -maxHeightCm, -3.5, h, 0);
+    float y = map(gazes[i][1], -2.5, -20, 0, h);
     
-    println("x and y", x, y);
+//    println("x and y", x, y);
     
     fill(255, 0, 0);
     ellipse(round(x), round(y), 20, 20);
