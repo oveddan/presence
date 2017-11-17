@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from subprocess import call
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 while(True):
     # Capture frame-by-frame
