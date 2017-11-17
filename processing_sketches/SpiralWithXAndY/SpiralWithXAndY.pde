@@ -1,5 +1,5 @@
-int w = 520;
-int h = 520;
+int w = 800;
+int h = 800;
 
 import processing.serial.*;
 
@@ -149,14 +149,24 @@ long gazeStart = millis();
 void setTargetRotation(int pole, float gazeX, float gazeY) {
   float poleCenter = pole * poleWidth + poleWidth / 2;
   
-  float distanceFromGaze = gazeX - poleCenter;
+  float distanceFromWave = map(gazeX - poleCenter, float(-w), float(w), -PI, PI);
+  //print(distanceFromWave);
+  //print(" ");
   
-  float targetRotation = map(gazeY, 0, h, -0.5, 0.5);
+  float amplitude = map(gazeY, h, 0, .5, -.5);
   
-  float rotation = targetRotation + (gazeX - poleCenter) / (w / 2.); 
+  float heightAtP = cos(distanceFromWave) * amplitude;
+  
+    print(heightAtP);
+  print(" ");
+  //float targetHeight = gazeY - distanceFromGaze;
+  
+  //float targetRotation = map(distanceFromGaze, 0, gazeY, -0.5, 0.5);
+  
+  float rotation = heightAtP; 
   //rotation += h / 2 - gazeY;
   
-  rotation = constrain(rotation, -.5, .5);
+  //rotation = constrain(rotation, -.5, .5);
   targetRotations[pole] = rotation;
 }
 String getFrameNumber(int frame) {
@@ -166,19 +176,22 @@ String getFrameNumber(int frame) {
 }
 int frame = 0;
 
-boolean captureTexture = true;
+boolean captureTexture = false;
 
 void draw() {
    background(255);
+   println("___");
    
+   //println(map(mouseY, h, 0, -.5, .5));
    if (captureTexture) {
      pg = createGraphics(floor(fullPoleSize), h);  
      print("drawing desing 1");
      pg.beginDraw();
+     pg.background(255);
      pg.translate(poleWidth / 2, 0);
      drawDesign1(0);
      pg.endDraw();
-     pg.save("texture.jpg");
+     pg.save("texture.gif");
      image(pg, 0, 0);
      print("drew");
      noLoop();
@@ -195,7 +208,7 @@ void draw() {
    }
    
    for(int i = 0; i < numPoles; i++ ) {
-     poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 5.;
+     poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 10.;
    //poleRotations[i] = -0.5;  
  }
  
@@ -209,9 +222,9 @@ void draw() {
    }   
    
   
-   if (frame < 60)
-     saveFrame("frame-" + getFrameNumber(frame) + ".gif");
-     frame++;
+   //if (frame < 60)
+   //  saveFrame("frame-" + getFrameNumber(frame) + ".gif");
+   //  frame++;
 }
 
 void keyPressed() {
