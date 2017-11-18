@@ -15,7 +15,7 @@ def to_output_string(outputs):
     return output_string
 
 HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 4006 # Arbitrary non-privileged port
+PORT = 4004 # Arbitrary non-privileged port
 vs = WebcamVideoStream(src=0).start()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -25,13 +25,14 @@ try:
     print('Connected by', addr)
     while True:
         frame = vs.read()
-        outputs = extract_features_and_detect_gazes(frame)
-        #  outputs.append([0, 0])
-        #  outputs.append([1, 1])
-        output_string = to_output_string(outputs)
+        if frame is not None:
+            outputs = extract_features_and_detect_gazes(frame)
+            #  outputs.append([0, 0])
+            #  outputs.append([1, 1])
+            output_string = to_output_string(outputs)
 
-        if output_string is not None:
-            conn.send((output_string + '\n').encode())
+            if output_string is not None:
+                conn.send((output_string + '\n').encode())
         #  if not data: break
             # do whatever you need to do with the data
             

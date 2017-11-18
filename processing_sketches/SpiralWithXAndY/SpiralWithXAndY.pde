@@ -169,6 +169,7 @@ void setTargetRotation(int pole, float gazeX, float gazeY) {
   //rotation = constrain(rotation, -.5, .5);
   targetRotations[pole] = rotation;
 }
+
 String getFrameNumber(int frame) {
   if (frame < 10)
     return "0" + frame;

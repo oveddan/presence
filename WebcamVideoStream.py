@@ -9,9 +9,6 @@ class WebcamVideoStream:
         cap = cv2.VideoCapture(src)
         cap.set(3,1280)
         cap.set(4,720)
-        # birghtness
-        cap.set(11, 0.1)
-        cap.set(15, 0.01)
         self.stream = cap
 
         (self.grabbed, self.frame) = self.stream.read()
@@ -31,13 +28,14 @@ class WebcamVideoStream:
         # keep looping infinitely until the thread is stopped
         while True:
             # if the thread indicator variable is set, stop the thread
-            print('updating')
+            #  print('updating')
             if self.stopped:
-                print('returning')
+                #  print('returning')
                 return
 
             # otherwise, read the next frame from the stream
             (self.grabbed, self.frame) = self.stream.read()
+            #  print('updated', self.grabbed)
 
     def read(self):
         # return the frame most recently read
@@ -45,4 +43,5 @@ class WebcamVideoStream:
 
     def stop(self):
         # indicate that the thread should be stopped
+        self.stream.release()
         self.stopped = True
