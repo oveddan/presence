@@ -1,20 +1,8 @@
 from gaze_detector_from_camera_stream import GazeDetectorStream
 import json
-#  from flask import Flask
-#  from gaze_detector_from_camera_stream import GazeDetectorStream
-#  app = Flask(__name__)
-
-#  current_outputs = []
-
-#  @app.route('/')
-#  def gaze():
-    #  return current_outputs
-
-#  #  for (frame, outputs) in GazeDetectorStream():
-    #  #  current_outputs = outputs
-
-# Echo server program
 import socket
+from WebcamVideoStream import WebcamVideoStream
+from gaze_detector import extract_features_and_detect_gazes
 
 def to_output_string(outputs):
     output_string = None
@@ -27,14 +15,17 @@ def to_output_string(outputs):
     return output_string
 
 HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 4005 # Arbitrary non-privileged port
+PORT = 4006 # Arbitrary non-privileged port
+vs = WebcamVideoStream(src=0).start()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(1)
 conn, addr = s.accept()
 try:
     print('Connected by', addr)
-    for (frame, outputs) in GazeDetectorStream():
+    while True:
+        frame = vs.read()
+        outputs = extract_features_and_detect_gazes(frame)
         #  outputs.append([0, 0])
         #  outputs.append([1, 1])
         output_string = to_output_string(outputs)
@@ -45,4 +36,5 @@ try:
             # do whatever you need to do with the data
             
 finally:
+    vs.stop()
     conn.close()
