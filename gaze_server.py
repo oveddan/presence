@@ -22,12 +22,12 @@ def to_output_string(outputs):
         output_string = ""
         for i, output in enumerate(outputs):
             output_string += str(output[0]) + ',' + str(output[1])
-        if (i < len(outputs) - 1):
-            output_string += '|'
+            if (i < len(outputs) - 1):
+                output_string += '_'
     return output_string
 
 HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 4002 # Arbitrary non-privileged port
+PORT = 4005 # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(1)
@@ -35,6 +35,8 @@ conn, addr = s.accept()
 try:
     print('Connected by', addr)
     for (frame, outputs) in GazeDetectorStream():
+        #  outputs.append([0, 0])
+        #  outputs.append([1, 1])
         output_string = to_output_string(outputs)
 
         if output_string is not None:

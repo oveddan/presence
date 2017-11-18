@@ -1,28 +1,33 @@
+# import the necessary packages
+from WebcamVideoStream import WebcamVideoStream
+from FPS import FPS
+import imutils
 import cv2
-import numpy as np
-from subprocess import call
 
-cap = cv2.VideoCapture(0)
+# created a *threaded* video stream, allow the camera sensor to warmup,
+# and start the FPS counter
+print("[INFO] sampling THREADED frames from webcam...")
+vs = WebcamVideoStream(src=0).start()
+fps = FPS().start()
 
-while(True):
-    # Capture frame-by-frame
-    #set the width and height, and UNSUCCESSFULLY set the exposure time
-    cap.set(3,1280)
-    cap.set(4,720)
-    # birghtness
-    cap.set(11, 0.1)
-    cap.set(15, 0.01)
-    ret, frame = cap.read()
+# loop over some frames...this time using the threaded stream
+while fps._numFrames < 1000:
+    # grab the frame from the threaded video stream and resize it
+    # to have a maximum width of 400 pixels
+    frame = vs.read()
 
-    cv2.imwrite('current-new.jpg', frame)
-    call(["mv", "current-new.jpg", "current.jpg"])
+    # check to see if the frame should be displayed to our screen
+    cv2.imshow("Frame", frame)
 
-    # When everything done, release the capture
+    # update the FPS counter
+    fps.update()
+    print(fps._numFrames)
+
+# stop the timer and display FPS information
+fps.stop()
+print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
+print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
+
+# do a bit of cleanup
 cv2.destroyAllWindows()
-
-
-#img = cv2.imread('notebooks/photos/IMG-1035.JPG')
-
-#outputs = extract_features_and_detect_gazes(img)
-
-#
+vs.stop()
