@@ -18,7 +18,7 @@ def to_output_string(outputs):
     return output_string
 
 HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 4000 # Arbitrary non-privileged port
+PORT = 4001 # Arbitrary non-privileged port
 vs = FaceAndEyeDetectorStream(0).start()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))

@@ -23,7 +23,7 @@ void setup() {
   // Connect to the local machine at port 5204.
   // This example will not run if you haven't
   // previously started a server on this port.
-  myClient = new Client(this, "127.0.0.1", 4000); 
+  myClient = new Client(this, "127.0.0.1", 4001); 
   for(int i = 0; i < 10; i++) {
     targetGazes[i][0] = 0;
     targetGazes[i][1] = 0;
@@ -101,7 +101,7 @@ void draw() {
   background(255);
   moveGazesToTargets();
   
-  //drawGazes();
+  drawGazes();
   
   if (usingGaze) {
     if (numGazes > 0) {
