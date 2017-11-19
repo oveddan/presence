@@ -17,13 +17,7 @@ def to_output_string(outputs):
                 output_string += '_'
     return output_string
 
-HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 4000 # Arbitrary non-privileged port
 vs = FaceAndEyeDetectorStream(0).start()
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen(1)
-conn, addr = s.accept()
 
 last_read = current_time()
 
@@ -39,16 +33,9 @@ try:
 
             if len(outputs) > 0:
                 print('time between frames', (current_time() - last_read) * 1. / 1000)
-                #  outputs.append([0, 0])
-                #  outputs.append([1, 1])
-                output_string = to_output_string(outputs)
-                if output_string is not None:
-                    conn.send((output_string + '\n').encode())
-
             last_read = current_time()
                     #  if not data: break
             # do whatever you need to do with the data
             
 finally:
     vs.stop()
-    conn.close()

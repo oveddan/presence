@@ -4,12 +4,15 @@ Client myClient;
 
 int w = 1920;
 int h = 1080;
+//int w = 800;
+//int h = 800;
 
 void settings() {
   size(w, h);
 }
  
  
+long lastUpdateTime = millis();
 float[][] targetGazes = new float[10][2];
 float[][] currentGazes = new float[10][2];
 
@@ -17,11 +20,10 @@ float[][] currentGazes = new float[10][2];
 
 int numGazes = 0;
 void setup() { 
-  size(800, 800); 
   // Connect to the local machine at port 5204.
   // This example will not run if you haven't
   // previously started a server on this port.
-  myClient = new Client(this, "127.0.0.1", 4006); 
+  myClient = new Client(this, "127.0.0.1", 4000); 
   for(int i = 0; i < 10; i++) {
     targetGazes[i][0] = 0;
     targetGazes[i][1] = 0;
@@ -51,14 +53,13 @@ void parseAndSetGazes(String gazeString) {
         targetGazes[0][1] = float(parts[1]);
       }
       
-      
-  println("Parsed");
+  lastUpdateTime = millis();
 }
 
-float animationSpeed = 20.;
+float animationSpeed = 40.;
 void moveGazesToTargets() {
   for (int i = 0; i < numGazes; i++) {
-    print("Grouped", currentGazes[i][0], targetGazes[i][0]);
+    //print("Grouped", currentGazes[i][0], targetGazes[i][0]);
     currentGazes[i][0] =currentGazes[i][0] += (targetGazes[i][0] - currentGazes[i][0]) / animationSpeed;
     currentGazes[i][1] =currentGazes[i][1] += (targetGazes[i][1] - currentGazes[i][1]) / animationSpeed;
   }  
@@ -85,7 +86,8 @@ void drawGazes() {
     //text(currentGazes[i][0] + "," + currentGazes[i][1] + "cm", round(x) -100, round(y) + 40);
   }
 }
- 
+
+boolean usingGaze = true;
  
 void draw() { 
   if (myClient.available() > 0) { 
@@ -99,12 +101,26 @@ void draw() {
   background(255);
   moveGazesToTargets();
   
-  drawGazes();
+  //drawGazes();
   
-  if (numGazes > 0) {
-    int x = mapGazeX(currentGazes[0][0]);
-    int y = mapGazeY(currentGazes[0][1]);
-    updatePoles(x, y);
-  }
-  drawPoles();
+  if (usingGaze) {
+    if (numGazes > 0) {
+      int x = mapGazeX(currentGazes[0][0]);
+      int y = mapGazeY(currentGazes[0][1]);
+      updatePoles(x, y);
+    }
+  } else {
+      updatePoles(mouseX, mouseY);
+    }
+    
+    drawPoles();
 } 
+
+int design = 1;
+int numDesigns = 3;
+void keyPressed() {
+  if(key == TAB) {
+    design++;
+    if (design >= numDesigns) design = 0;
+  }
+}

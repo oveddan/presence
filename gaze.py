@@ -6,7 +6,7 @@ from lib import current_time, crop_image
 import os
 
 
-caffe.set_mode_cpu()
+#caffe.set_mode_cpu()
 
 model_root = os.path.dirname(os.path.realpath(__file__)) + "/GazeCapture/models/"
 
@@ -47,6 +47,7 @@ face_transformer = create_image_transformer('image_face', mu_face)
 # face grid transformer just passes through the data
 face_grid_transformer = caffe.io.Transformer({'facegrid': net.blobs['facegrid'].data.shape})
 
+
 # set the batch size to 1
 def set_batch_size(batch_size):
     net.blobs['image_left'].reshape(batch_size, 3, 224, 224)
@@ -55,6 +56,11 @@ def set_batch_size(batch_size):
     net.blobs['facegrid'].reshape(batch_size, 625, 1, 1)
 
 set_batch_size(1)
+
+#  net.forward()
+caffe.set_device(0)  # if we have multiple GPUs, pick the first one
+caffe.set_mode_gpu()
+net.forward()
 
 def test_face(img, face, face_feature):
     eyes, face_grid = face_feature
@@ -66,7 +72,7 @@ def test_face(img, face, face_feature):
     transformed_right_eye = right_eye_transformer.preprocess('image_right', crop_image(img, eyes[0]))
     transformed_left_eye = left_eye_transformer.preprocess('image_left', crop_image(img, eyes[1]))
     transformed_face = face_transformer.preprocess('image_face', crop_image(img, face))
-    transformed_face_grid = np.copy(face_grid).reshape(1, 625, 1, 1)
+    transformed_face_grid = face_grid.reshape(1, 625, 1, 1)
 
     net.blobs['image_left'].data[...] = transformed_left_eye
     net.blobs['image_right'].data[...] = transformed_right_eye
@@ -74,7 +80,7 @@ def test_face(img, face, face_feature):
     net.blobs['facegrid'].data[...] = transformed_face_grid
 
     output = net.forward()
-    net.forward()
+    #  net.forward()
     print("Feeding through the network took " + str((current_time() - start_ms) * 1. / 1000) + "s")
 
     return np.copy(output['fc3'][0])
