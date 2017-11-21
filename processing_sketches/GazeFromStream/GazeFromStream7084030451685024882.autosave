@@ -42,22 +42,25 @@ void parseAndSetGazes(String gazeString) {
         for(int i = 0; i < outputStrings.length; i++) {
           String[] parts = outputStrings[i].split(",");
           
-          targetGazes[i][0] = float(parts[0]);
-          targetGazes[i][1] = float(parts[1]);
+          if(parts.length == 2) {
+            targetGazes[i][0] = float(parts[0]);
+            targetGazes[i][1] = float(parts[1]);
+          }
         }
      }
      else {
         numGazes = 1;
         String[] parts = gazeString.split(",");
-        targetGazes[0][0] = float(parts[0]);
-        targetGazes[0][1] = float(parts[1]);
+        if(parts.length == 2) {
+          targetGazes[0][0] = float(parts[0]);
+          targetGazes[0][1] = float(parts[1]);
+        }
       }
       
   lastUpdateTime = millis();
 }
 
-
-float animationSpeed = 20.;
+float animationSpeed = 40.;
 void moveGazesToTargets() {
   for (int i = 0; i < numGazes; i++) {
     //print("Grouped", currentGazes[i][0], targetGazes[i][0]);
@@ -83,7 +86,7 @@ void drawGazes() {
 
     fill(255, 0, 0);
     ellipse(x, y, 20, 20);
-    //textSize(26);
+    textSize(26);
     //text(currentGazes[i][0] + "," + currentGazes[i][1] + "cm", round(x) -100, round(y) + 40);
   }
 }
@@ -91,24 +94,17 @@ void drawGazes() {
 boolean usingGaze = true;
 
 int[][] getGazes() {
-  int [][] gazes;
-  
-  if (usingGaze) {
-    gazes = new int[numGazes][2];
-    
-    for (int i = 0; i < numGazes; i++) {
-      gazes[i][0] = mapGazeX(currentGazes[i][0]);
-      gazes[i][1] = mapGazeY(currentGazes[i][1]);
+   if (usingGaze) {
+    int [][] result = new int[numGazes][2];;
+    if (numGazes > 0) {
+      int x = mapGazeX(currentGazes[0][0]);
+      int y = mapGazeY(currentGazes[0][1]);
+      updatePoles(x, y);
     }
   } else {
-    gazes = new int[1][2];
-    gazes[0][0] = mouseX;
-    gazes[0][1] = mouseY;
+    updatePoles(mouseX, mouseY);
   }
-  return gazes;
 }
-
-
  
 void draw() { 
   if (myClient.available() > 0) { 
@@ -124,20 +120,21 @@ void draw() {
   
   drawGazes();
   
-  int[][] gazes = getGazes();
-  
-  if (design < 2) {
-    if (gazes.length > 0)
-      updatePoles(gazes);
-      
+  if (usingGaze) {
+    if (numGazes > 0) {
+      int x = mapGazeX(currentGazes[0][0]);
+      int y = mapGazeY(currentGazes[0][1]);
+      updatePoles(x, y);
+    }
+  } else {
+      updatePoles(mouseX, mouseY);
+    }
+    
     drawPoles();
-  } else if (design == 2) {
-    drawParticleSystem(gazes);
-  }
 } 
 
-int design = 0;
-int numDesigns = 3;
+int design = 3;
+int numDesigns = 4;
 void keyPressed() {
   if(key == TAB) {
     design++;

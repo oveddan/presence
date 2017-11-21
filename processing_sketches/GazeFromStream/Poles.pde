@@ -101,7 +101,9 @@ void drawDivider(int pole) {
   popMatrix();
 }
 
-void updatePoles(int gazeX, int gazeY) {
+void updatePoles(int[][] gazes) {
+  int gazeX = gazes[0][0];
+  int gazeY = gazes[0][1];
   for(int i = 0; i < numPoles; i++) {
      setTargetRotation(i, gazeX, gazeY);
    }
