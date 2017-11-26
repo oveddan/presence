@@ -4,19 +4,17 @@ Client myClient;
 
 //int w = 1920;
 //int h = 1080;
-int w = 800;
-int h = 800;
+int w = 600;
+int h = 600;
 
 void settings() {
-  size(w, h);
+  size(w, h, P3D);
 }
  
  
 long lastUpdateTime = millis();
 float[][] targetGazes = new float[10][2];
 float[][] currentGazes = new float[10][2];
-
-
 
 int numGazes = 0;
 void setup() { 
@@ -31,6 +29,7 @@ void setup() {
     currentGazes[i][1] = 0;
   }
   
+  setupPoles();
   resetPoles();
 } 
 
@@ -126,18 +125,14 @@ void draw() {
   
   int[][] gazes = getGazes();
   
-  if (design < 2) {
-    if (gazes.length > 0)
-      updatePoles(gazes);
+  if (gazes.length > 0)
+    updatePoles(gazes);
       
-    drawPoles();
-  } else if (design == 2) {
-    drawParticleSystem(gazes);
-  }
+  drawPoles();
 } 
 
-int design = 3;
-int numDesigns = 4;
+int design = 0;
+int numDesigns = 3;
 void keyPressed() {
   if(key == TAB) {
     design++;

@@ -133,9 +133,22 @@ void draw() {
 
 int design = 0;
 int numDesigns = 8;
+
+int visualMode = 1;
+int numVisualModes = 2;
+
+long lastMouseMovedTime = 0;
+
 void keyPressed() {
   if(key == TAB) {
     design++;
     if (design >= numDesigns) design = 0;
+  } if(key == UP) {
+    visualMode++;
+    if (visualMode >= numVisualModes) visualMode = 0;
   }
+}
+
+void mouseMoved() {
+  lastMouseMovedTime = millis();
 }

@@ -69,24 +69,35 @@ void drawRevealingColumnGradient(int pole) {
     pg.rect(poleWidth, 0, poleWidth/2, h);
 }
 
+void drawRealColumn(int pole) {
+  //beginShape(QUAD_STRIP);
+  //vertex(x, -100, z, u, 0);
+  //vertex(x, 100, z, u, img.height);
+  //endShape();
+}
+
 PGraphics pg;
 void drawPole(int pole, long time) {
-  pg = createGraphics(floor(poleWidth), h);
-  pg.beginDraw();
-  pg.translate(poleRotations[pole] * poleWidth, 0);
-  if (design == 0) {
-    drawSpiral();
-  } else if (design == 1) {
-    drawRevealingColumn();
-  }else if (design == 2) {
-    drawRevealingColumnGradient(pole);
+  if (design == 3) {
+    drawRealColumn(pole);
+  } else {
+    pg = createGraphics(floor(poleWidth), h);
+    pg.beginDraw();
+    pg.translate(poleRotations[pole] * poleWidth, 0);
+    if (design == 0) {
+      drawSpiral();
+    } else if (design == 1) {
+      drawRevealingColumn();
+    }else if (design == 2) {
+      drawRevealingColumnGradient(pole);
+    }
+    pg.endDraw();
+    
+    pushMatrix();
+    translate(pole * poleWidth, 0);
+    image(pg, 0, 0, poleWidth, h);
+    popMatrix();
   }
-  pg.endDraw();
-  
-  pushMatrix();
-  translate(pole * poleWidth, 0);
-  image(pg, 0, 0, poleWidth, h);
-  popMatrix();
 }
 
 

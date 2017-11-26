@@ -33,7 +33,13 @@ float getPoleCenterX(int pole) {
   return gapSize + tubeRadius + (tubeWidth + gapSize) * pole;
 }
 
-void setTargetRotation(int pole, float gazeX, float gazeY) {
+void setTargetRotation(int pole, float gazeX, float gazeY, boolean isActive) {
+  if (!isActive) {
+    int alternation = round(millis() / 5000.) % 2;
+    targetRotations[pole] = alternation - pole % 2;
+    return;
+  }
+    
   float poleCenter = getPoleCenterX(pole);
   
   float x = map(poleCenter - gazeX, float(-w), float(w), -PI, PI);
@@ -52,19 +58,8 @@ void setTargetRotation(int pole, float gazeX, float gazeY) {
     rotation = 1.5 - cos(1.5*x)/2 + amplitude;
   else
     rotation = .5 + cos(1.5*x)/2 + amplitude;
-  
-  
-  //if (rotation < -.2)
-  //  rotation = 1 + rotation;
-  //else if(rotation >= 1.2)
-  //  rotation -= 1;
     
   rotation = constrain(rotation, 0, 1);
-  
-  //println(pole, rotation);
-  
-  //rotation = map(gazeX, 0, w, PI/2, -PI/2);
-  //println(poleCenter, rotation);
   
   targetRotations[pole] = rotation;
 }
@@ -136,8 +131,9 @@ void drawPole(int pole) {
 void updatePoles(int[][] gazes) {
   int gazeX = gazes[0][0];
   int gazeY = gazes[0][1];
+  boolean isActive = (millis() - lastMouseMovedTime) / 1000. < 5.;
   for(int i = 0; i < numPoles; i++) {
-    setTargetRotation(i, gazeX, gazeY);
+    setTargetRotation(i, gazeX, gazeY, isActive);
   }
    
   for(int i = 0; i < numPoles; i++ ) {
