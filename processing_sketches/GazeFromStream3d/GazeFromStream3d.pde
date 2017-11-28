@@ -125,27 +125,24 @@ void draw() {
   
   int[][] gazes = getGazes();
   
-  if (gazes.length > 0)
-    updatePoles(gazes);
-      
+  boolean isActive = (millis() - lastMouseMovedTime) / 1000. < 5.;
+  if (gazes.length > 0 && isActive) {
+    updatePolesFromGazes(gazes);
+  } else {
+    updateIdleAnimation();
+  }
+  
+  animatePoles();
   drawPoles();
 } 
-
-int design = 0;
-int numDesigns = 8;
-
-int visualMode = 1;
-int numVisualModes = 2;
 
 long lastMouseMovedTime = 0;
 
 void keyPressed() {
   if(key == TAB) {
-    design++;
-    if (design >= numDesigns) design = 0;
-  } if(key == UP) {
-    visualMode++;
-    if (visualMode >= numVisualModes) visualMode = 0;
+    changeDesign();
+  } else if(key == UP) {
+    changeIdleMode();
   }
 }
 
