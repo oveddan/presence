@@ -1,6 +1,6 @@
 
 
-int numPoles = 24;
+int numPoles = 21;
 float poleWidth = w * 1.0 / numPoles;
 float fullPoleSize = poleWidth * 2;
 

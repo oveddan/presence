@@ -79,19 +79,24 @@ def extract_image_features(img):
     start_ms = current_time()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     face_detections = face_cascade.detectMultiScale(gray, 1.3, 5)
+    #  print('face detection took ' + str((current_time() - start_ms) / 1000.))
+
+    left_to_right_face_detections = sorted(face_detections, key=lambda detection: detection[0])
 
     faces = []
     face_features = []
-    for [x,y,w,h] in face_detections:
+    for [x,y,w,h] in left_to_right_face_detections:
         face = [x, y, w, h]
+        #  start_eyes = current_time()
         eyes = detect_eyes(face, img, gray)
+        #  print('eye extraction '  + str((current_time() - start_eyes) / 1000.))
         face_grid = get_face_grid(face, img.shape[1], img.shape[0], 25)
 
         faces.append(face)
         face_features.append([eyes, face_grid])
 
     duration_ms = current_time() - start_ms
-    print("Face and eye extraction took: ", str(duration_ms / 1000) + "s")
+    #  print("Face and eye extraction took: ", str(duration_ms / 1000) + "s")
 
     return img, faces, face_features
 

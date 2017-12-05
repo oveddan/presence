@@ -91,7 +91,6 @@ def test_faces(img, faces, face_features):
     for i, face in enumerate(faces):
         output = test_face(img, face, face_features[i])
 
-        if output is not None:
-            outputs.append(output)
+        outputs.append(output)
 
     return outputs

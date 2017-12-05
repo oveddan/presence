@@ -23,7 +23,7 @@ void setup() {
   // Connect to the local machine at port 5204.
   // This example will not run if you haven't
   // previously started a server on this port.
-  myClient = new Client(this, "127.0.0.1", 4001); 
+  myClient = new Client(this, "127.0.0.1", 4002); 
   for(int i = 0; i < 10; i++) {
     targetGazes[i][0] = 0;
     targetGazes[i][1] = 0;
@@ -42,22 +42,26 @@ void parseAndSetGazes(String gazeString) {
         for(int i = 0; i < outputStrings.length; i++) {
           String[] parts = outputStrings[i].split(",");
           
-          targetGazes[i][0] = float(parts[0]);
-          targetGazes[i][1] = float(parts[1]);
+          if(parts.length == 2) {
+            targetGazes[i][0] = float(parts[0]);
+            targetGazes[i][1] = float(parts[1]);
+          }
         }
      }
      else {
         numGazes = 1;
         String[] parts = gazeString.split(",");
-        targetGazes[0][0] = float(parts[0]);
-        targetGazes[0][1] = float(parts[1]);
+        if(parts.length == 2) {
+          targetGazes[0][0] = float(parts[0]);
+          targetGazes[0][1] = float(parts[1]);
+        }
       }
       
   lastUpdateTime = millis();
 }
 
 
-float animationSpeed = 20.;
+float animationSpeed = 5.;
 void moveGazesToTargets() {
   for (int i = 0; i < numGazes; i++) {
     //print("Grouped", currentGazes[i][0], targetGazes[i][0]);
@@ -107,8 +111,6 @@ int[][] getGazes() {
   }
   return gazes;
 }
-
-
  
 void draw() { 
   if (myClient.available() > 0) { 
@@ -136,7 +138,7 @@ void draw() {
   }
 } 
 
-int design = 3;
+int design = 0;
 int numDesigns = 4;
 void keyPressed() {
   if(key == TAB) {

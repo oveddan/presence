@@ -1,5 +1,6 @@
 # import the necessary packages
 from threading import Thread
+from lib import current_time 
 import cv2
 
 class WebcamVideoStream:
@@ -12,6 +13,7 @@ class WebcamVideoStream:
         self.stream = cap
 
         (self.grabbed, self.frame) = self.stream.read()
+        self.frame_time = current_time()
 
         # initialize the variable used to indicate if the thread should
         # be stopped
@@ -35,11 +37,12 @@ class WebcamVideoStream:
 
             # otherwise, read the next frame from the stream
             (self.grabbed, self.frame) = self.stream.read()
+            self.frame_time = current_time()
             #  print('updated', self.grabbed)
 
     def read(self):
         # return the frame most recently read
-        return self.frame
+        return (self.frame, self.frame_time)
 
     def stop(self):
         # indicate that the thread should be stopped
