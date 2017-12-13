@@ -1,4 +1,5 @@
 import processing.net.*; 
+import processing.serial.*;
 
 Client myClient; 
 
@@ -17,6 +18,10 @@ float[][] targetGazes = new float[10][2];
 float[][] currentGazes = new float[10][2];
 
 int numGazes = 0;
+
+Boolean useSerial = true;
+Serial myPort; 
+
 void setup() { 
   // Connect to the local machine at port 5204.
   // This example will not run if you haven't
@@ -31,6 +36,11 @@ void setup() {
   
   setupPoles();
   resetPoles();
+  
+  if (useSerial) {
+    printArray(Serial.list());
+    myPort = new Serial(this,"/dev/tty.usbmodem00196521", 50000, 'N', 8, 2.0);
+  }
 } 
 
 void parseAndSetGazes(String gazeString) {
@@ -56,7 +66,7 @@ void parseAndSetGazes(String gazeString) {
 }
 
 
-float animationSpeed = 20.;
+float animationSpeed = 5.;
 void moveGazesToTargets() {
   for (int i = 0; i < numGazes; i++) {
     //print("Grouped", currentGazes[i][0], targetGazes[i][0]);
@@ -107,7 +117,25 @@ int[][] getGazes() {
   return gazes;
 }
 
+int minServoQuarters = 704 * 4;
+int maxServoQuarters = 2496 * 4;
 
+void setServoValue(int servo, float percentage) {
+   int servoX = int(map(percentage, 0, 1, minServoQuarters, maxServoQuarters));
+   //if (servo == 0)
+   //  println(servoX);
+   
+   myPort.write(0x84); 
+   myPort.write(servo);
+   myPort.write(byte(servoX) & 0x7F); 
+   myPort.write(byte(servoX>>7) & 0x7F);
+}
+
+void updateMotorPositions() {
+  for(int i = 0; i < numPoles; i++) {
+    setServoValue(i, poleRotations[i]);
+  }
+}
  
 void draw() { 
   if (myClient.available() > 0) { 
@@ -134,6 +162,13 @@ void draw() {
   
   animatePoles();
   drawPoles();
+  
+  if (useSerial) {
+    updateMotorPositions();
+    //println(poleRotations[0]);
+    
+    delay(20);
+  }
 } 
 
 long lastMouseMovedTime = 0;
