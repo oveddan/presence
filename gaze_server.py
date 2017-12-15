@@ -23,7 +23,7 @@ def to_output_string(outputs):
     return output_string
 
 HOST = ''                 # Symbolic name meaning all available interfaces
-PORT = 4002 # Arbitrary non-privileged port
+PORT = 4001 # Arbitrary non-privileged port
 vs = FaceAndEyeDetectorStream(0).start()
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -47,14 +47,15 @@ try:
 
             if len(new_outputs) > 0:
                 outputs = smooth_outputs(new_outputs, frame_time, previous_outputs, previous_frame_time)
-                print('original outputs', new_outputs)
-                print('smoothed outputs', outputs)
+                #  print('original outputs', new_outputs)
+                #  print('smoothed outputs', outputs)
                 previous_outputs = new_outputs 
                 previous_frame_time = frame_time
                 #  outputs.append([0, 0])
                 #  outputs.append([1, 1])
                 output_string = to_output_string(outputs)
                 if output_string:
+                    print('time since taken ', current_time() - frame_time)
                     conn.send((output_string + '\n').encode())
 
             last_read = current_time()

@@ -7,7 +7,7 @@ void rollingWave(int pole, long time) {
   float fract = (time - start) % 10000 / 10000.;
   float waveHeight = sin(((getPoleCenterX(pole)/w - fract) * 4));
   if(pole > 18)
-  println("wave", fract, pole,getPoleCenterX(pole), fract * w,  waveHeight);
+  //println("wave", fract, pole,getPoleCenterX(pole), fract * w,  waveHeight);
   targetRotations[pole] = map(waveHeight, -1, 1, 0, 1);
 }
 

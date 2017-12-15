@@ -13,7 +13,8 @@ class FaceAndEyeDetectorStream:
         frame, frame_time = self.webcam_stream.read()
         
         self.frame_time = frame_time
-        (self.img, self.faces, self.face_features) = extract_image_features(frame)
+        if frame is not None:
+            (self.img, self.faces, self.face_features) = extract_image_features(frame)
 
         # initialize the variable used to indicate if the thread should
         # be stopped
@@ -39,7 +40,8 @@ class FaceAndEyeDetectorStream:
             frame, frame_time = self.webcam_stream.read()
             self.frame_time = frame_time
             
-            (self.img, self.faces, self.face_features) = extract_image_features(frame)
+            if frame is not None:
+                (self.img, self.faces, self.face_features) = extract_image_features(frame)
             #  print('the faces', self.faces)
             #  print('updated', self.grabbed)
 

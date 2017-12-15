@@ -3,13 +3,16 @@ import processing.serial.*;
 
 Client myClient; 
 
-//int w = 1920;
-//int h = 1080;
-int w = 600;
-int h = 600;
+int w = 1920;
+int h = 1080;
+//int w = 600;
+//int h = 600;
+Boolean useSerial = true;
+boolean usingGaze = true;
+boolean renderVisuals = false;
 
 void settings() {
-  size(w, h, P3D);
+  size(renderVisuals ? w : 1, renderVisuals ? h : 1, P3D);
 }
  
  
@@ -19,7 +22,6 @@ float[][] currentGazes = new float[10][2];
 
 int numGazes = 0;
 
-Boolean useSerial = true;
 Serial myPort; 
 
 void setup() { 
@@ -39,7 +41,8 @@ void setup() {
   
   if (useSerial) {
     printArray(Serial.list());
-    myPort = new Serial(this,"/dev/tty.usbmodem00196521", 50000, 'N', 8, 2.0);
+//    myPort = new Serial(this,"/dev/tty.usbmodem00196521", 50000, 'N', 8, 2.0);
+ myPort = new Serial(this,"/dev/ttyACM0", 9900, 'N', 8, 2.0);
   }
 } 
 
@@ -97,8 +100,6 @@ void drawGazes() {
   }
 }
 
-boolean usingGaze = false;
-
 int[][] getGazes() {
   int [][] gazes;
   
@@ -109,6 +110,9 @@ int[][] getGazes() {
       gazes[i][0] = mapGazeX(currentGazes[i][0]);
       gazes[i][1] = mapGazeY(currentGazes[i][1]);
     }
+    
+    if (numGazes > 0)
+      println("gaze:", gazes[0][0], gazes[0][1]);
   } else {
     gazes = new int[1][2];
     gazes[0][0] = mouseX;
@@ -137,6 +141,11 @@ void updateMotorPositions() {
   }
 }
  
+boolean isActive() {
+  if (usingGaze) return true;
+  return (millis() - lastMouseMovedTime) / 1000. < 5.;
+}
+ 
 void draw() { 
   if (myClient.available() > 0) { 
     String gazeString = myClient.readStringUntil('\n');
@@ -153,8 +162,7 @@ void draw() {
   
   int[][] gazes = getGazes();
   
-  boolean isActive = (millis() - lastMouseMovedTime) / 1000. < 5.;
-  if (gazes.length > 0 && isActive) {
+  if (gazes.length > 0 && isActive()) {
     updatePolesFromGazes(gazes);
   } else {
     updateIdleAnimation();

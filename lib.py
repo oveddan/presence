@@ -17,15 +17,15 @@ def smooth_outputs(outputs, frame_time, previous_outputs, previous_frame_time):
 
     smoothed_outputs = []
     for i, output in enumerate(outputs):
-        print(i, ' num previous', len(previous_outputs))
+        #  print(i, ' num previous', len(previous_outputs))
         if output is not None and i < len(previous_outputs) and previous_outputs[i] is not None:
             frame_diff = min(frame_time - previous_frame_time, 1000)
             percentage = frame_diff / 1000.
             
             smoothed_output = np.array((2, 1), dtype=np.float32)
             previous_output = previous_outputs[i]
-            print(output, previous_output)
-            print('smoothing ', percentage, previous_output.shape, output.shape)
+            #  print(output, previous_output)
+            #  print('smoothing ', percentage, previous_output.shape, output.shape)
 
             smoothed_output[0] = lerp(previous_output[0], output[0], percentage)
             smoothed_output[1] = lerp(previous_output[1], output[1], percentage)

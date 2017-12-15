@@ -6,7 +6,8 @@ void setup()
 {
    size(512, 512);
    printArray(Serial.list());
-   myPort = new Serial(this,"/dev/tty.usbmodem00196521", 9900, 'N', 8, 2.0);
+   //myPort = new Serial(this,"/dev/tty.usbmodem00196521", 9900, 'N', 8, 2.0);
+   myPort = new Serial(this,"/dev/ttyACM0", 9900, 'N', 8, 2.0);
    //myPort.write(0xAA);
 //   myPort = new Serial(this,"/dev/tty.usbmodem00196521");
    //myPort.write(0xAA);
