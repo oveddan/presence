@@ -15,7 +15,7 @@ void draw()
    
    myPort.write(0xFF); 
    myPort.write(0x09);
-   myPort.write(byte(int(map(mouseX, 0, 512, 0, 254))));
+   myPort.write(1);
    
    delay(40);
 }

@@ -3,13 +3,13 @@ import processing.serial.*;
 
 Client myClient; 
 
-int w = 1920;
-int h = 1080;
-//int w = 600;
-//int h = 600;
-Boolean useSerial = true;
-boolean usingGaze = true;
-boolean renderVisuals = false;
+//int w = 1920;
+//int h = 1080;
+int w = 600;
+int h = 600;
+Boolean useSerial = false;
+boolean usingGaze = false;
+boolean renderVisuals = true;
 
 void settings() {
   size(renderVisuals ? w : 1, renderVisuals ? h : 1, P3D);
@@ -49,6 +49,8 @@ void setup() {
   }
 } 
 
+long lastGazeTime = millis();
+
 void parseAndSetGazes(String gazeString) {
     if(gazeString.contains("_")){ 
         String[] outputStrings = gazeString.split("_");
@@ -56,6 +58,7 @@ void parseAndSetGazes(String gazeString) {
         numGazes = outputStrings.length;
         for(int i = 0; i < outputStrings.length; i++) {
           String[] parts = outputStrings[i].split(",");
+          lastGazeTime = millis();
           
           targetGazes[i][0] = float(parts[0]);
           targetGazes[i][1] = float(parts[1]);
@@ -66,6 +69,7 @@ void parseAndSetGazes(String gazeString) {
         String[] parts = gazeString.split(",");
         targetGazes[0][0] = float(parts[0]);
         targetGazes[0][1] = float(parts[1]);
+        lastGazeTime = millis();
       }
       
   lastUpdateTime = millis();
@@ -114,8 +118,9 @@ int[][] getGazes() {
       gazes[i][1] = mapGazeY(currentGazes[i][1]);
     }
     
-    if (numGazes > 0)
+    if (numGazes > 0) {
       println("gaze:", gazes[0][0], gazes[0][1]);
+    }
   } else {
     gazes = new int[1][2];
     gazes[0][0] = mouseX;
@@ -145,7 +150,9 @@ void updateMotorPositions() {
 }
  
 boolean isActive() {
-  if (usingGaze) return true;
+  if (usingGaze) 
+    return (millis() - lastGazeTime) / 1000. < 5.;
+  
   return (millis() - lastMouseMovedTime) / 1000. < 5.;
 }
  
