@@ -10,6 +10,7 @@ int h = 600;
 Boolean useSerial = false;
 boolean usingGaze = false;
 boolean renderVisuals = true;
+boolean interactiveMode = false;
 
 void settings() {
   size(renderVisuals ? w : 1, renderVisuals ? h : 1, P3D);
@@ -147,11 +148,18 @@ void setServoValue(int servo, float percentage) {
 
 void updateMotorPositions() {
   for(int i = 0; i < numPoles; i++) {
-    setServoValue(i, poleRotations[i]);
+    setServoValue(i, targetRotations[i]);
   }
 }
  
+ 
+
+void toggleInteractiveMode() {
+  interactiveMode = !interactiveMode;
+}
+ 
 boolean isActive() {
+  if (interactiveMode) return false;
   if (usingGaze) 
     return (millis() - lastGazeTime) / 1000. < 5.;
   
@@ -194,10 +202,12 @@ void draw() {
 long lastMouseMovedTime = 0;
 
 void keyPressed() {
-  if(key == TAB) {
+  if(keyCode == TAB) {
     changeDesign();
-  } else if(key == UP) {
+  } else if(keyCode == UP) {
     changeIdleMode();
+  } else if (keyCode == ENTER) {
+    toggleInteractiveMode();
   }
 }
 

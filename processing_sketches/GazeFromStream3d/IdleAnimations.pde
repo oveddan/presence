@@ -37,7 +37,7 @@ void rotatingX() {
     if(pole == 20)
       println(pole, theta, yAtPole);
 
-    poleRotations[pole] = rotation;
+    targetRotations[pole] = rotation;
   }
 }
 
