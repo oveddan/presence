@@ -111,8 +111,9 @@ void updatePolesFromGazes(int[][] gazes) {
 }
 
 void animatePoles() {
+  float animationSpeed = usingGaze && isActive() ? 50 : 20;
   for(int i = 0; i < numPoles; i++ ) {
-    poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 20.;
+    poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / animationSpeed;
   }
 }
 

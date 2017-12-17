@@ -8,8 +8,8 @@ int h = 600;
 //int w = 600;
 //int h = 600;
 Boolean useSerial = true;
-boolean usingGaze = false;
-boolean renderVisuals = true;
+boolean usingGaze = true;
+boolean renderVisuals = false;
 boolean interactiveMode = false;
 
 void settings() {
@@ -48,7 +48,7 @@ void setup() {
   if (useSerial) {
     printArray(Serial.list());
 //    myPort = new Serial(this,"/dev/tty.usbmodem00196521", 50000, 'N', 8, 2.0);
- myPort = new Serial(this,"/dev/ttyACM1", 9900, 'N', 8, 2.0);
+ myPort = new Serial(this,"/dev/ttyACM0", 9900, 'N', 8, 2.0);
   }
 } 
 

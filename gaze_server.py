@@ -19,7 +19,7 @@ def to_output_string(outputs):
 
                 if (i < len(outputs) - 1):
                     output_string += '_'
-    print("output string", output_string)
+    #  print("output string", output_string)
     return output_string
 
 HOST = ''                 # Symbolic name meaning all available interfaces
@@ -49,7 +49,7 @@ try:
                 outputs = smooth_outputs(new_outputs, frame_time, previous_outputs, previous_frame_time)
                 #  print('original outputs', new_outputs)
                 #  print('smoothed outputs', outputs)
-                previous_outputs = new_outputs 
+                previous_outputs = outputs
                 previous_frame_time = frame_time
                 #  outputs.append([0, 0])
                 #  outputs.append([1, 1])
