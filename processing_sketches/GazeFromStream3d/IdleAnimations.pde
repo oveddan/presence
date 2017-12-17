@@ -12,6 +12,9 @@ void rollingWave(int pole, long time) {
   targetRotations[pole] = constrain(map(waveHeight, -1, 1, 0, 1), 0, 1);
 }
 
+    
+long start = millis();
+
 void updateIdleAnimation() {
   long time = millis();
   for(int i = 0; i < numPoles; i++) {
@@ -21,9 +24,10 @@ void updateIdleAnimation() {
       rollingWave(i, time);
     }
   }
+  
+  if (millis() - start > 2000)
+    changeIdleMode();
 }
-    
-long start = millis();
 int idleMode = 1;
 int numIdleModes = 2;
 void changeIdleMode() {
