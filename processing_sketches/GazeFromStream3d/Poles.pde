@@ -1,5 +1,5 @@
 int tubeRes = 32;
-int numPoles = 24;
+int numPoles = 21;
 float[] tubeX = new float[tubeRes];
 float[] tubeY = new float[tubeRes];
 
@@ -112,7 +112,7 @@ void updatePolesFromGazes(int[][] gazes) {
 
 void animatePoles() {
   for(int i = 0; i < numPoles; i++ ) {
-    poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 10.;
+    poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 20.;
   }
 }
 

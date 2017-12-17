@@ -3,13 +3,14 @@ import processing.serial.*;
 
 Client myClient; 
 
-int w = 1920;
-int h = 1080;
+int w = 600;
+int h = 600;
 //int w = 600;
 //int h = 600;
 Boolean useSerial = true;
-boolean usingGaze = true;
+boolean usingGaze = false;
 boolean renderVisuals = true;
+boolean interactiveMode = false;
 
 void settings() {
   size(renderVisuals ? w : 1, renderVisuals ? h : 1, P3D);
@@ -30,7 +31,9 @@ void setup() {
   // previously started a server on this port.
   
   //myClient = new Client(this, "127.0.0.1", 4001); 
-  myClient = new Client(this, "172.16.249.250", 4001); 
+  if (usingGaze) {
+    myClient = new Client(this, "172.16.249.250", 4001); 
+  }
   
   for(int i = 0; i < 10; i++) {
     targetGazes[i][0] = 0;
@@ -49,6 +52,8 @@ void setup() {
   }
 } 
 
+long lastGazeTime = millis();
+
 void parseAndSetGazes(String gazeString) {
     if(gazeString.contains("_")){ 
         String[] outputStrings = gazeString.split("_");
@@ -56,6 +61,7 @@ void parseAndSetGazes(String gazeString) {
         numGazes = outputStrings.length;
         for(int i = 0; i < outputStrings.length; i++) {
           String[] parts = outputStrings[i].split(",");
+          lastGazeTime = millis();
           
           targetGazes[i][0] = float(parts[0]);
           targetGazes[i][1] = float(parts[1]);
@@ -66,6 +72,7 @@ void parseAndSetGazes(String gazeString) {
         String[] parts = gazeString.split(",");
         targetGazes[0][0] = float(parts[0]);
         targetGazes[0][1] = float(parts[1]);
+        lastGazeTime = millis();
       }
       
   lastUpdateTime = millis();
@@ -114,8 +121,9 @@ int[][] getGazes() {
       gazes[i][1] = mapGazeY(currentGazes[i][1]);
     }
     
-    if (numGazes > 0)
+    if (numGazes > 0) {
       println("gaze:", gazes[0][0], gazes[0][1]);
+    }
   } else {
     gazes = new int[1][2];
     gazes[0][0] = mouseX;
@@ -140,17 +148,26 @@ void setServoValue(int servo, float percentage) {
 
 void updateMotorPositions() {
   for(int i = 0; i < numPoles; i++) {
-    setServoValue(i, poleRotations[i]);
+    setServoValue(i, targetRotations[i]);
   }
 }
  
+ 
+
+void toggleInteractiveMode() {
+  interactiveMode = !interactiveMode;
+}
+ 
 boolean isActive() {
-  if (usingGaze) return true;
+  if (interactiveMode) return false;
+  if (usingGaze) 
+    return (millis() - lastGazeTime) / 1000. < 5.;
+  
   return (millis() - lastMouseMovedTime) / 1000. < 5.;
 }
  
 void draw() { 
-  if (myClient.available() > 0) { 
+  if (usingGaze && myClient.available() > 0) { 
     String gazeString = myClient.readStringUntil('\n');
     
     if (gazeString != null) {
@@ -178,17 +195,19 @@ void draw() {
     updateMotorPositions();
     //println(poleRotations[0]);
     
-    //delay(20);
+    //(20);
   }
 } 
 
 long lastMouseMovedTime = 0;
 
 void keyPressed() {
-  if(key == TAB) {
+  if(keyCode == TAB) {
     changeDesign();
-  } else if(key == UP) {
+  } else if(keyCode == UP) {
     changeIdleMode();
+  } else if (keyCode == ENTER) {
+    toggleInteractiveMode();
   }
 }
 
