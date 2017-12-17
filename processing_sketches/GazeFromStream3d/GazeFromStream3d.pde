@@ -30,7 +30,9 @@ void setup() {
   // previously started a server on this port.
   
   //myClient = new Client(this, "127.0.0.1", 4001); 
-  myClient = new Client(this, "172.16.249.250", 4001); 
+  if (usingGaze) {
+    myClient = new Client(this, "172.16.249.250", 4001); 
+  }
   
   for(int i = 0; i < 10; i++) {
     targetGazes[i][0] = 0;
@@ -157,7 +159,7 @@ boolean isActive() {
 }
  
 void draw() { 
-  if (myClient.available() > 0) { 
+  if (usingGaze && myClient.available() > 0) { 
     String gazeString = myClient.readStringUntil('\n');
     
     if (gazeString != null) {

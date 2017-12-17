@@ -5,10 +5,11 @@ void topBottomAlternation(int pole) {
 
 void rollingWave(int pole, long time) {
   float fract = (time - start) % 10000 / 10000.;
-  float waveHeight = sin(((getPoleCenterX(pole)/w - fract) * 4));
-  if(pole > 18)
+  float timeInAnim = fract * PI;
+  float waveHeight = sin(((getPoleCenterX(pole)/w - timeInAnim) * 2));
+  //if(pole > 18)
   //println("wave", fract, pole,getPoleCenterX(pole), fract * w,  waveHeight);
-  targetRotations[pole] = map(waveHeight, -1, 1, 0, 1);
+  targetRotations[pole] = constrain(map(waveHeight, -1, 1, 0, 1), 0, 1);
 }
 
 void updateIdleAnimation() {
@@ -16,8 +17,9 @@ void updateIdleAnimation() {
   for(int i = 0; i < numPoles; i++) {
     if (idleMode == 0)
       topBottomAlternation(i);
-    else
+    else {
       rollingWave(i, time);
+    }
   }
 }
     

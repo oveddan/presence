@@ -1,5 +1,5 @@
 int tubeRes = 32;
-int numPoles = 24;
+int numPoles = 21;
 float[] tubeX = new float[tubeRes];
 float[] tubeY = new float[tubeRes];
 
