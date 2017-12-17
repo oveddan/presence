@@ -187,7 +187,7 @@ void draw() {
     updateMotorPositions();
     //println(poleRotations[0]);
     
-    //delay(20);
+    //(20);
   }
 } 
 

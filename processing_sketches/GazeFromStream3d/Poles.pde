@@ -112,7 +112,7 @@ void updatePolesFromGazes(int[][] gazes) {
 
 void animatePoles() {
   for(int i = 0; i < numPoles; i++ ) {
-    poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 10.;
+    poleRotations[i] = poleRotations[i] + (targetRotations[i] - poleRotations[i]) / 50.;
   }
 }
 
